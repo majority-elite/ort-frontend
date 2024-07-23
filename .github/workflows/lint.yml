@@ -29,4 +29,4 @@ jobs:
         run: pnpm exec eslint . --max-warnings=0
 
       - name: 📦 Run Prettier
-        run: pnpm exec prettier --check
+        run: pnpm exec prettier . --check
