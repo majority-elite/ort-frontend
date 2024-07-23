@@ -19,10 +19,10 @@ module.exports = {
     commonjs: true,
     es6: true,
   },
-  ignorePatterns: ['!**/.server', '!**/.client'],
+  ignorePatterns: ['!**/.server', '!**/.client', '!.storybook'],
 
   // Base config
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'plugin:storybook/recommended'],
 
   overrides: [
     // React
