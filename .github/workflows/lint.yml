@@ -28,7 +28,7 @@ jobs:
         run: pnpm install
 
       - name: 📦 Run ESLint
-        run: pnpm exec eslint app/ --max-warnings=0
+        run: pnpm exec eslint . --max-warnings=0
 
       - name: 📦 Run Prettier
         run: pnpm exec prettier --check
