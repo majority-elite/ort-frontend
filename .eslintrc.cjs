@@ -21,6 +21,7 @@ module.exports = {
   },
   ignorePatterns: ['!**/.server', '!**/.client', '!.storybook'],
 
+  plugins: ['prettier'],
   // Base config
   extends: ['eslint:recommended', 'plugin:storybook/recommended'],
 
@@ -140,5 +141,6 @@ module.exports = {
       },
     ],
     'arrow-body-style': ['warn', 'as-needed'],
+    'prettier/prettier': 'warn',
   },
 };
