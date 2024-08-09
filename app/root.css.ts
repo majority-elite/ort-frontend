@@ -12,6 +12,10 @@ globalStyle('*, *::before, *::after', {
   fontFamily: 'SUIT-Variable',
 });
 
+globalStyle('html', {
+  fontSize: '62.5%',
+});
+
 globalStyle('body', {
   margin: 0,
 });
