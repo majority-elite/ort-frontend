@@ -14,6 +14,6 @@ export const container = style({
 export const labelText = style([
   textStyle.body1R,
   {
-    color: themeVars.color.primary.normal,
+    color: themeVars.color.primary.normal.hex,
   },
 ]);

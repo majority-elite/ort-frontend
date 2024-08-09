@@ -21,3 +21,12 @@ export const getMediaQuery = (
   );
   return `screen and (min-width: ${minimum}px)${isFinite(maximum) ? `and (max-width: ${maximum}px)` : ''}`;
 };
+
+export const getRGBFromHex = (hex: string) => {
+  const hexToConvert = hex.replace('#', '');
+  const aRgbHex = hexToConvert.match(/.{1,2}/g);
+  if (aRgbHex === null) {
+    return [0, 0, 0];
+  }
+  return [aRgbHex[0], aRgbHex[1], aRgbHex[2]].map((item) => parseInt(item, 16));
+};

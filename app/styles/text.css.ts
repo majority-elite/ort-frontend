@@ -39,7 +39,7 @@ const textStyleInfo = {
       fontWeight: FontWeight.BOLD,
     },
   },
-  header2B: {
+  headline2B: {
     pc: {
       fontSize: 24,
       lineHeight: 30,
