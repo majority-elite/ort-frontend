@@ -1,5 +1,6 @@
 import type { MetaFunction } from '@remix-run/cloudflare';
-import Test from '@/components/Test';
+import KakaoLoginButton from '@/components/KakaoLoginButton';
+// import Test from '@/components/Test';
 
 export const meta: MetaFunction = () => [
   { title: 'ORT - 동아리 플랫폼' },
@@ -13,7 +14,8 @@ export const meta: MetaFunction = () => [
 const Index = () => (
   <div>
     <h1>Ort</h1>
-    <Test />
+    {/* <Test /> */}
+    <KakaoLoginButton />
   </div>
 );
 
