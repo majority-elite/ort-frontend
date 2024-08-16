@@ -5,9 +5,12 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
-import './root.css';
+import { type ReactNode } from 'react';
 
-export const Layout = ({ children }: { children: React.ReactNode }) => (
+import './root.css';
+import '@/styles/theme.css';
+
+export const Layout = ({ children }: { children: ReactNode }) => (
   <html lang="ko">
     <head>
       <meta charSet="utf-8" />
