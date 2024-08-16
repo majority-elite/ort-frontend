@@ -1,7 +1,7 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 import { Breakpoint } from '@/constants/style';
 import { themeVars } from '@/styles/theme.css';
-import { getMediaQuery } from '@/utils/style';
+import { getMediaQuery, rgba } from '@/utils/style';
 
 export const buttonBase = style({
   cursor: 'pointer',
@@ -33,10 +33,10 @@ export const buttonStyleByVariant = styleVariants({
     borderColor: themeVars.color.primary.normal.hex,
     backgroundColor: 'transparent',
     ':hover': {
-      backgroundColor: `rgba(${themeVars.color.primary.normal.rgb}, 0.1)`,
+      backgroundColor: rgba(themeVars.color.primary.normal.rgb, 0.1),
     },
     ':active': {
-      backgroundColor: `rgba(${themeVars.color.primary.normal.rgb}, 0.2)`,
+      backgroundColor: rgba(themeVars.color.primary.normal.rgb, 0.2),
     },
     ':disabled': {
       backgroundColor: 'transparent',

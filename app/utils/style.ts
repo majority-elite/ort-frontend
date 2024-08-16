@@ -30,3 +30,6 @@ export const getRGBFromHex = (hex: string) => {
   }
   return [aRgbHex[0], aRgbHex[1], aRgbHex[2]].map((item) => parseInt(item, 16));
 };
+
+export const rgba = (cssVar: string, alpha: number) =>
+  `rgba(${cssVar}, ${alpha})`;
