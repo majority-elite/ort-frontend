@@ -5,6 +5,8 @@ import { getMediaQuery, rgba } from '@/utils/style';
 
 export const buttonBase = style({
   cursor: 'pointer',
+  appearance: 'none',
+  WebkitAppearance: 'none',
   ':disabled': {
     cursor: 'not-allowed',
   },
