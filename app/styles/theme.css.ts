@@ -1,10 +1,18 @@
 import { createGlobalTheme } from '@vanilla-extract/css';
 import { getRGBFromHex } from '@/utils/style';
 
-const getColorVarsFromHex = (hex: string) => ({
-  hex,
-  rgb: getRGBFromHex(hex).join(', '),
-});
+type ColorVars = {
+  hex: string;
+  rgb: string;
+};
+
+const getColorVarsFromHex = (hex: string): ColorVars => {
+  const { r, g, b } = getRGBFromHex(hex);
+  return {
+    hex,
+    rgb: `${r}, ${g}, ${b}`,
+  };
+};
 
 export const themeVars = createGlobalTheme(':root', {
   color: {
