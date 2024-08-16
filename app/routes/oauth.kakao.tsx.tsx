@@ -16,6 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
   요청 실패 시 오류 메시지를 JSON 형태로 반환하고 콘솔에 오류를 출력합니다. 
   */
   try {
+    //추후에 진짜 백엔드 api url로 변경예정입니다.
     const response = await axios.post('(백엔드api url)', {
       code,
       state,
