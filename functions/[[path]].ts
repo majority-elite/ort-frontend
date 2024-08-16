@@ -3,7 +3,10 @@ import {
   createCookie,
 } from '@remix-run/cloudflare';
 import { createPagesFunctionHandler } from '@remix-run/cloudflare-pages';
-import type { AuthSessionData } from '@/constants/types/auth';
+import type {
+  AuthSessionData,
+  AuthSessionStorage,
+} from '@/constants/types/auth';
 import type { Env } from '@/constants/types/env';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -13,7 +16,9 @@ import * as build from '../build/server';
 
 export const onRequest = createPagesFunctionHandler<Env>({
   build,
-  getLoadContext: ({ context }) => {
+  getLoadContext: ({
+    context,
+  }): Env & { authSessionStorage: AuthSessionStorage } => {
     const sessionCookie = createCookie('__auth_session', {
       secrets: [context.cloudflare.env.AUTH_COOKIE_SESSION_SECRET],
       sameSite: true,
