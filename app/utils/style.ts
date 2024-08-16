@@ -1,7 +1,20 @@
 /**
  * Media Query String을 얻는 함수
- * * 주어진 breakpoint 중 최소와 최대만 뽑는 것으로, 중간에 비어 있는 구간이 없음을 유의
- * (ex) [10, 12], [15, 18]이 주어질 경우, 13px-14px 구간이 비어야 하지만, 결과 string은 10px-18px 전부를 포함
+ *
+ * - `Breakpoint` 객체와 함께 사용할 것을 권장
+ *
+ * - 주어진 breakpoint 중 최소와 최대만 뽑는 것으로, 중간에 비어 있는 구간이 없음을 유의
+ * >- (ex) [10, 12], [15, 18]이 주어질 경우, 13px-14px 구간이 비어야 하지만, 결과 string은 10px-18px 전부를 포함
+ *
+ * - 이론상 가장 작은 breakpoint와 가장 큰 breakpoint만 포함해도 작동하지만,
+ * 해당 스타일이 어떤 화면에 각각 적용되는지를 한 번에 파악하기 어려워 human error가 발생하기 쉬우므로
+ * 모든 breakpoint를 명시하기를 권장
+ * >- (ex)
+ * ```
+ * getMediaQuery([Breakpoint.MOBILE2, Breakpoint.TABLET2]) // (X) As-is
+ * getMediaQuery([Breakpoint.MOBILE2, Breakpoint.MOBILE1, Breakpoint.TABLET2]) // (O) To-be
+ * ```
+ *
  * @param breakpoints [breakpoint 시작, breakpoint 끝] 타입의 모음
  * @returns Media Query String
  * @example
