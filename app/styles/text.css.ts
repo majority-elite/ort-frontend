@@ -1,4 +1,4 @@
-import { ComplexStyleRule, styleVariants } from '@vanilla-extract/css';
+import { type ComplexStyleRule, styleVariants } from '@vanilla-extract/css';
 import { Breakpoint } from '@/constants/style';
 import { getMediaQuery } from '@/utils/style';
 

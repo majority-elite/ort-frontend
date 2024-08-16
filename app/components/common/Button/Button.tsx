@@ -1,10 +1,10 @@
-import { type DetailedHTMLProps } from 'react';
+import { type ButtonHTMLAttributes, type DetailedHTMLProps } from 'react';
 import * as styles from './Button.css';
 import { textStyle } from '@/styles/text.css';
 
 interface ButtonProps
   extends DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
   variant: 'primary' | 'secondary';
