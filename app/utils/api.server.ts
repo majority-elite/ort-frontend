@@ -125,9 +125,7 @@ export const fetchApi = async <Variables, Result>(
       error.message;
 
     // error message from server - 1st priority
-    if (serverError.message) {
-      error.message = serverError.message ?? error.message;
-    }
+    error.message = serverError?.message ?? error.message;
 
     throw new ApiError({
       ...error,
