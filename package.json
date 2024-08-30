@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "remix vite:dev",
+    "dev": "wrangler pages download config ort-web --force && remix vite:build && wrangler pages dev --live-reload ./build/client",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
@@ -16,10 +16,10 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@remix-run/cloudflare": "2.10.2",
-    "@remix-run/cloudflare-pages": "2.10.2",
-    "@remix-run/react": "2.10.2",
-    "@remix-run/serve": "2.10.2",
+    "@remix-run/cloudflare": "2.11.2",
+    "@remix-run/cloudflare-pages": "2.11.2",
+    "@remix-run/react": "2.11.2",
+    "@remix-run/serve": "2.11.2",
     "@vanilla-extract/css": "1.15.3",
     "isbot": "4.4.0",
     "react": "18.3.1",
@@ -28,15 +28,15 @@
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
-    "@remix-run/dev": "2.10.2",
-    "@remix-run/testing": "2.10.2",
-    "@storybook/addon-essentials": "8.2.5",
-    "@storybook/addon-interactions": "8.2.5",
-    "@storybook/addon-links": "8.2.5",
-    "@storybook/blocks": "8.2.5",
-    "@storybook/react": "8.2.5",
-    "@storybook/react-vite": "8.2.5",
-    "@storybook/test": "8.2.5",
+    "@remix-run/dev": "2.11.2",
+    "@remix-run/testing": "2.11.2",
+    "@storybook/addon-essentials": "8.2.9",
+    "@storybook/addon-interactions": "8.2.9",
+    "@storybook/addon-links": "8.2.9",
+    "@storybook/blocks": "8.2.9",
+    "@storybook/react": "8.2.9",
+    "@storybook/react-vite": "8.2.9",
+    "@storybook/test": "8.2.9",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.16.0",
@@ -54,11 +54,11 @@
     "husky": "9.1.1",
     "lint-staged": "15.2.7",
     "prettier": "3.3.3",
-    "storybook": "8.2.5",
+    "storybook": "8.2.9",
     "typescript": "5.5.3",
     "vite": "5.3.3",
     "vite-tsconfig-paths": "4.3.2",
-    "wrangler": "3.66.0"
+    "wrangler": "3.72.2"
   },
   "engines": {
     "node": ">=20.0.0"
