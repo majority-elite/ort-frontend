@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import getUUID from '@/utils/getUUID';
+import { getUUID } from '@/utils/random';
 
 const clientId = 'f5aa2f20e42d783654b8e8c01bfc6312';
 //redirectUri는 등록된 redirectUri중에 임의로 사용했습니다.
