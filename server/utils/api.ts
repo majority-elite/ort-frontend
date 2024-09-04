@@ -1,7 +1,7 @@
-import { getAuthToken } from './auth.server';
-import { ApiError } from '@/constants/api';
-import type { ApiInfo } from '@/constants/types/api';
-import type { AuthSession } from '@/constants/types/auth';
+import { ApiError } from '../constants/api';
+import type { ApiInfo } from '../constants/types/api';
+import type { AuthSession } from '../constants/types/auth';
+import { getAuthToken } from './auth';
 
 const COMMON_ERROR: {
   errorByStatus: Record<

@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "wrangler pages download config ort-web --force && remix vite:build && wrangler pages dev --live-reload ./build/client",
+    "dev": "wrangler pages download config ort-web --force && remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
@@ -24,12 +24,14 @@
     "isbot": "4.4.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "uuid": "10.0.0"
+    "uuid": "10.0.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@remix-run/dev": "2.11.2",
+    "@remix-run/node": "2.11.2",
     "@remix-run/testing": "2.11.2",
     "@storybook/addon-essentials": "8.2.9",
     "@storybook/addon-interactions": "8.2.9",
@@ -40,6 +42,7 @@
     "@storybook/test": "8.2.9",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
+    "@types/set-cookie-parser": "2.4.10",
     "@types/uuid": "10.0.0",
     "@typescript-eslint/eslint-plugin": "7.16.0",
     "@typescript-eslint/parser": "7.16.0",
@@ -56,6 +59,7 @@
     "husky": "9.1.1",
     "lint-staged": "15.2.7",
     "prettier": "3.3.3",
+    "set-cookie-parser": "2.7.0",
     "storybook": "8.2.9",
     "typescript": "5.5.3",
     "vite": "5.3.3",

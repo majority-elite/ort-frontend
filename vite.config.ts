@@ -1,14 +1,12 @@
-import {
-  vitePlugin as remix,
-  cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
-} from '@remix-run/dev';
+import { vitePlugin as remix } from '@remix-run/dev';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { remixCloudflareDevProxyVitePlugin } from './server/plugins/remixCloudflareDevProxyVitePlugin';
 
 export default defineConfig({
   plugins: [
-    remixCloudflareDevProxy(),
+    remixCloudflareDevProxyVitePlugin(),
     remix({
       future: {
         v3_fetcherPersist: true,

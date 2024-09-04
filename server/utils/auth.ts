@@ -1,4 +1,4 @@
-import type { AuthSession, AuthSessionData } from '@/constants/types/auth';
+import type { AuthSession, AuthSessionData } from '../constants/types/auth';
 
 export const clearAuthToken = async (authSession: AuthSession) => {
   authSession.unset('accessToken');
