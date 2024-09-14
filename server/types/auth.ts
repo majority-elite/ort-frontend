@@ -1,4 +1,4 @@
-import type { Session, SessionStorage } from '@remix-run/cloudflare';
+import type { SessionStorage, Session } from '@remix-run/cloudflare';
 
 export interface AuthSessionData {
   accessToken: string;

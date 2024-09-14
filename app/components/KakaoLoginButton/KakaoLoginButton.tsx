@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import useEnv from '@/hooks/useEnv';
-import { getUUID } from '@/utils/random';
 
 const KakaoLoginButton: React.FC = () => {
   const env = useEnv();
   const [kakaoAuthUrl, setKakaoAuthUrl] = useState('');
 
   useEffect(() => {
-    const userUUID = getUUID();
-    const redirectUri = window.location.origin + '/oauth/kakao';
+    const redirectUri =
+      window.location.origin.replace('localhost', '127.0.0.1') + '/oauth/kakao';
     setKakaoAuthUrl(
-      `https://kauth.kakao.com/oauth/authorize?client_id=${env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&state=${userUUID}`,
+      `${env.API_URL}/oauth2/authorization/kakao?redirect_to=${redirectUri}`,
     );
-  }, [env.KAKAO_CLIENT_ID]);
+    // setKakaoAuthUrl('http://146.56.161.252:8080/oauth2/authorization/kakao');
+  }, [env.API_URL]);
 
   return (
     <a href={kakaoAuthUrl}>

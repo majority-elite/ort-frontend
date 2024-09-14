@@ -1,7 +1,48 @@
-import { ApiError } from '../constants/api';
-import type { ApiInfo } from '../constants/types/api';
-import type { AuthSession } from '../constants/types/auth';
+import { json, TypedResponse } from '@remix-run/cloudflare';
+import { Api, ApiError } from '../constants/api';
+import type {
+  ApiOptions,
+  ApiReturnType,
+  BackendError,
+  FrontendErrorResponse,
+  FrontendSuccessResponse,
+  JsonValue,
+} from '../types/api';
+import type { AuthSession } from '../types/auth';
 import { getAuthToken } from './auth';
+
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+export const makeSuccessResponse = <T extends JsonValue>(
+  info: Omit<Optional<FrontendSuccessResponse<T>, 'status'>, 'isSuccess'>,
+  init?: ResponseInit,
+) =>
+  json<FrontendSuccessResponse<T>>(
+    {
+      ...info,
+      isSuccess: true,
+      status: info.status ?? 200,
+    },
+    { status: info.status ?? 200, ...init },
+  );
+
+export const makeErrorResponse = <T extends JsonValue>(
+  info: Omit<
+    Optional<FrontendErrorResponse<T>, 'status' | 'message'>,
+    'isSuccess'
+  >,
+  init?: ResponseInit,
+): TypedResponse<FrontendErrorResponse<T>> =>
+  json<FrontendErrorResponse<T>>(
+    {
+      ...info,
+      isSuccess: false,
+      status: info.status ?? 500,
+      message:
+        info.message ?? '문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+    },
+    { status: info.status ?? 500, ...init },
+  );
 
 const COMMON_ERROR: {
   errorByStatus: Record<
@@ -18,79 +59,35 @@ const COMMON_ERROR: {
   },
 };
 
-export const api =
-  <Result>() =>
-  <Variables>(
-    apiInfo: Omit<ApiInfo<Variables, Result>, '_resultType'>,
-  ): ApiInfo<Variables, Result> =>
-    apiInfo;
-
-export const fetchApi = async <Variables, Result>(
-  apiInfo: ApiInfo<Variables, Result>,
+export const fetchApiImpl = async <Variables, Result>(
+  api: Api<Variables, Result>,
   variables: Variables,
   apiUrl: string,
   authSession?: AuthSession,
-): Promise<Result> => {
-  const baseUrl = apiInfo.baseUrl ?? apiUrl;
-  const url = `${baseUrl}${apiInfo.endpoint}`;
-  const parsedRequest = apiInfo.request(variables);
-
-  const pathString =
-    parsedRequest.pathParams?.reduce<string>(
-      (prev, cur) => `${prev}/${cur}`,
-      '',
-    ) ?? '';
-
-  const params = parsedRequest.params ?? {};
-  const queryString = Object.keys(params).reduce(
-    (prev, cur) =>
-      `${prev}${
-        params[cur] !== null && params[cur] !== undefined
-          ? `&${cur}=${params[cur]}`
-          : ''
-      }`,
-    '',
-  );
-
-  const fetchUrl = `${url}${pathString}${
-    queryString ? `?${queryString.slice(1)}` : ''
-  }`;
-
+  options?: ApiOptions,
+): Promise<ApiReturnType<Result>> => {
   try {
+    const baseUrl = api.baseUrl ?? apiUrl;
+
     const token = authSession ? await getAuthToken(authSession, apiUrl) : null;
 
-    if (!token?.accessToken && apiInfo.needToLogin) {
+    const fetchInfo = api.getFetchInfo(variables, token?.accessToken);
+
+    const fetchUrl = `${baseUrl}${fetchInfo.pathname}`;
+
+    if (!token?.accessToken && api.needToLogin) {
       throw new ApiError({
         status: 401,
-        path: fetchUrl,
-        request: parsedRequest,
+        api,
+        request: fetchInfo.request,
         ...COMMON_ERROR.errorByStatus[401],
       });
     }
 
-    const authorizationHeader = token?.accessToken
-      ? {
-          Authorization: `Bearer ${token.accessToken}`,
-        }
-      : undefined;
-
     const response = await fetch(fetchUrl, {
-      method: apiInfo.method,
-      body:
-        // eslint-disable-next-line no-nested-ternary
-        parsedRequest.body !== undefined
-          ? parsedRequest.body instanceof FormData
-            ? parsedRequest.body
-            : JSON.stringify(parsedRequest.body)
-          : undefined,
-      headers: {
-        'Content-Type':
-          parsedRequest.body instanceof FormData
-            ? 'multipart/form-data'
-            : 'application/json',
-        ...authorizationHeader,
-        ...parsedRequest.headers,
-      },
+      method: fetchInfo.method,
+      body: fetchInfo.body,
+      headers: fetchInfo.headers,
     });
 
     // `Result`가 `null`인 경우가 있지만 이는 try-catch에 의한 것으로, 타입 체계상에서는 분기처리할 수 없음
@@ -99,17 +96,18 @@ export const fetchApi = async <Variables, Result>(
     try {
       result = await response.json<Result>();
     } catch (error) {
-      console.log(error, `${apiInfo.method} ${apiInfo.endpoint}`);
+      console.log(error, `${api.method} ${api.endpoint}`);
       result = null;
     }
 
     if (response.ok) {
-      return result;
+      return {
+        isSuccess: true,
+        response: result,
+      };
     }
 
-    // TODO: 서버 쪽 schema 전달되면 타입 수정
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const serverError: any = result;
+    const backendError: BackendError | null = result;
 
     const error: {
       message?: string;
@@ -121,32 +119,45 @@ export const fetchApi = async <Variables, Result>(
 
     // error message by status - 2nd priority
     error.message =
-      apiInfo.errorMessage?.messageByStatus?.[response.status]?.message ??
+      api.errorMessage?.messageByStatus?.[response.status]?.message ??
       error.message;
 
     // error message from server - 1st priority
-    error.message = serverError?.message ?? error.message;
+    error.message = backendError?.error ?? error.message;
 
     throw new ApiError({
       ...error,
       status: response.status,
-      path: apiInfo.endpoint,
-      serverError: result,
-      request: parsedRequest,
+      api,
+      backendError: backendError ?? undefined,
+      request: fetchInfo.request,
     });
   } catch (error) {
     // 이미 처리된 에러는 그대로 반환
     if (error instanceof ApiError) {
       console.log(error.serverError);
-      throw error;
+      if (options?.throwOnError) {
+        throw error;
+      }
+      return {
+        isSuccess: false,
+        error: error,
+      };
     }
 
     // TODO: Sentry 등 에러 로깅 솔루션 추가
-    console.error(error, apiInfo.request(variables), fetchUrl);
-    throw new ApiError({
-      path: apiInfo.endpoint,
-      request: parsedRequest,
-      clientError: error,
+    console.error(error, api, variables);
+    const apiError = new ApiError({
+      api,
+      request: api.request(variables),
+      frontendError: error,
     });
+    if (options?.throwOnError) {
+      throw apiError;
+    }
+    return {
+      isSuccess: false,
+      error: apiError,
+    };
   }
 };

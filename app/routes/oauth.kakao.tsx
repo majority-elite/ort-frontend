@@ -1,15 +1,23 @@
 import { type LoaderFunctionArgs } from '@remix-run/cloudflare';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const code = url.searchParams.get('code');
-  const state = url.searchParams.get('state');
-
-  console.log(code, state);
+  const cookieHeader = request.headers;
+  console.log(cookieHeader);
 
   return null;
 };
 
-const KakaoRedirect = () => <div>카카오 로그인 중...</div>;
+const KakaoRedirect = () => {
+  console.log('kakaoredirect');
+
+  return (
+    <div>
+      {/* <p className={textStyle.headline1B}>{fetcher.state}</p>
+      <fetcher.Form method="POST">
+        <button type="submit">test submit</button>
+      </fetcher.Form> */}
+    </div>
+  );
+};
 
 export default KakaoRedirect;

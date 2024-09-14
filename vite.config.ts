@@ -2,7 +2,7 @@ import { vitePlugin as remix } from '@remix-run/dev';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { remixCloudflareDevProxyVitePlugin } from './server/plugins/remixCloudflareDevProxyVitePlugin';
+import { remixCloudflareDevProxyVitePlugin } from './server';
 
 export default defineConfig({
   plugins: [
