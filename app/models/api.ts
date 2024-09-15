@@ -112,6 +112,30 @@ export class Api<Variables, Result> {
     };
   }
 
+  /**
+   * 백엔드 API를 호출하는 method
+   * @example
+   * ```
+   * // Case 1: `action`에서의 일반적인 활용
+   * export const action = ({ context }: ActionFunctionArgs) => {
+   *   // ...
+   *   const response = api_loginWithKakao.fetch({ code, state }, context);
+   *   if (!response.isSuccess) {
+   *     return makeErrorResponse(response.error);
+   *   }
+   *   const { result } = response;
+   *   // ...
+   * };
+   *
+   * // Case 2: `loader`는 Error Response를 반환하기보다 에러 자체를 throw해야 하는 경우가 대부분임
+   * // 이 경우 `throwOnError` 옵션을 주면 `isSuccess`를 체크하지 않아도 자동으로 `ApiSuccessReturnType`으로 추론
+   * export const loader = ({ context }: LoaderFunctionArgs) => {
+   *   // ...
+   *   const { result } = api_loginWithKakao.fetch({ code, state }, context);
+   *   // ...
+   * };
+   * ```
+   */
   async fetch(
     variables: Variables,
     context: AppLoadContext,
@@ -166,7 +190,7 @@ export class Api<Variables, Result> {
       if (response.ok) {
         return {
           isSuccess: true,
-          response: result,
+          result,
         };
       }
 
