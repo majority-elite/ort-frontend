@@ -49,7 +49,7 @@ export class AuthSessionService {
   }
 
   /**
-   * access token을 얻는 method
+   * auth token을 얻는 method
    * - access token이 만료된 경우 refresh token으로 자동 업데이트
    */
   async getAuthToken(context: AppLoadContext): Promise<{
