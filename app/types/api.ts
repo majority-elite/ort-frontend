@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Api, ApiError } from '../constants/api';
+import type { ApiError } from '@/models/api';
 
 type JsonPrimitive = string | number | boolean | null;
 type JsonArray = JsonValue[] | readonly JsonValue[];
@@ -57,20 +57,3 @@ export type ApiReturnType<Result> =
 export interface ApiOptions {
   throwOnError?: boolean;
 }
-
-export type FetchApi = {
-  <Variables, Result>(
-    api: Api<Variables, Result>,
-    variables: Variables,
-    options?: ApiOptions & {
-      throwOnError?: false;
-    },
-  ): Promise<ApiReturnType<Result>>;
-  <Variables, Result>(
-    api: Api<Variables, Result>,
-    variables: Variables,
-    options?: ApiOptions & {
-      throwOnError: true;
-    },
-  ): Promise<ApiSuccessReturnType<Result>>;
-};

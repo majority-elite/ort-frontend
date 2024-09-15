@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const clientEnvSchema = z.object({
-  API_URL: z.string(),
+  KAKAO_CLIENT_ID: z.string(),
 });
 
 export const serverEnvSchema = z.object({

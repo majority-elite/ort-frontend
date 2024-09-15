@@ -51,12 +51,12 @@ importers:
       '@commitlint/config-conventional':
         specifier: 19.2.2
         version: 19.2.2
+      '@majority-elite/remix-dev-utils':
+        specifier: 0.1.2
+        version: 0.1.2(typescript@5.5.3)(vite@5.3.3(@types/node@22.5.3))(wrangler@3.72.2(@cloudflare/workers-types@4.20240903.0))
       '@remix-run/dev':
         specifier: 2.11.2
         version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.3))(@remix-run/serve@2.11.2(typescript@5.5.3))(@types/node@22.5.3)(typescript@5.5.3)(vite@5.3.3(@types/node@22.5.3))(wrangler@3.72.2(@cloudflare/workers-types@4.20240903.0))
-      '@remix-run/node':
-        specifier: 2.11.2
-        version: 2.11.2(typescript@5.5.3)
       '@remix-run/testing':
         specifier: 2.11.2
         version: 2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.3)
@@ -141,9 +141,6 @@ importers:
       prettier:
         specifier: 3.3.3
         version: 3.3.3
-      set-cookie-parser:
-        specifier: 2.7.0
-        version: 2.7.0
       storybook:
         specifier: 8.2.9
         version: 8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2))
@@ -1558,6 +1555,21 @@ packages:
 
   '@lottiefiles/dotlottie-web@0.33.0':
     resolution: {integrity: sha512-/KerIs0UkmwuDKYWlNGWYSSZkZaLNXXHqg6qCnP7P2JuzgI4bHRmlIk3+LoJjl/jWqd3WyI4t5oRV6ch0sQwvg==}
+
+  '@majority-elite/remix-dev-utils@0.1.2':
+    resolution: {integrity: sha512-+nuPSvR4jboUs70YiNMHje2kS+wszQl0lt2bR7lGCDlzFidxuMNuMKAJgBU1lf8Seq7eFUCVpB+YltHPA5ULDQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      typescript: ^5.1.0
+      vite: ^5.1.0
+      wrangler: ^3.28.2
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vite:
+        optional: true
+      wrangler:
+        optional: true
 
   '@mdx-js/mdx@2.3.0':
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
@@ -7224,6 +7236,16 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@lottiefiles/dotlottie-web@0.33.0': {}
+
+  '@majority-elite/remix-dev-utils@0.1.2(typescript@5.5.3)(vite@5.3.3(@types/node@22.5.3))(wrangler@3.72.2(@cloudflare/workers-types@4.20240903.0))':
+    dependencies:
+      '@remix-run/node': 2.11.2(typescript@5.5.3)
+      '@remix-run/server-runtime': 2.11.2(typescript@5.5.3)
+      set-cookie-parser: 2.7.0
+    optionalDependencies:
+      typescript: 5.5.3
+      vite: 5.3.3(@types/node@22.5.3)
+      wrangler: 3.72.2(@cloudflare/workers-types@4.20240903.0)
 
   '@mdx-js/mdx@2.3.0':
     dependencies:

@@ -1,4 +1,4 @@
-import { Api } from '@server';
+import { Api } from '@/models/api';
 
 export const api_loginWithKakao = new Api<
   { code: string; state: string },

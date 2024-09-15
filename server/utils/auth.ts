@@ -1,4 +1,3 @@
-import { Api, ApiError } from '../constants/api';
 import type { AuthSession, AuthSessionData } from '../types/auth';
 
 export const clearAuthToken = async (authSession: AuthSession) => {
@@ -18,18 +17,6 @@ export const updateAuthToken = async (
     }
   });
 };
-
-const api_getNewAccessToken = new Api<
-  { refreshToken: string },
-  { accessToken: string; accessTokenExpiresAt: string }
->({
-  method: 'POST',
-  endpoint: '/token/access',
-  needToLogin: false,
-  request: (variables) => ({
-    body: { refreshToken: variables.refreshToken },
-  }),
-});
 
 export const getAuthToken = async (
   authSession: AuthSession,
@@ -59,20 +46,21 @@ export const getAuthToken = async (
   const now = new Date();
 
   // access token 만료 (서버 응답 시간 등을 고려해 1분 여유 포함)
-  if (accessTokenExpiresAt.getTime() + 1000 * 60 >= now.getTime()) {
+  if (accessTokenExpiresAt.getTime() + 1000 * 60 <= now.getTime()) {
     // refresh token이 만료되지 않음 (서버 응답 시간 등을 고려해 1분 여유 포함)
-    if (refreshTokenExpiresAt.getTime() + 1000 * 60 < now.getTime()) {
+    if (refreshTokenExpiresAt.getTime() > now.getTime() + 1000 * 60) {
       try {
-        const fetchInfo = api_getNewAccessToken.getFetchInfo({
-          refreshToken,
+        const response = await fetch(`${apiUrl}/token/access`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refreshToken }),
         });
-        const response = await fetch(`${apiUrl}${fetchInfo.pathname}`, {
-          method: fetchInfo.method,
-          headers: fetchInfo.headers,
-          body: fetchInfo.body,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await response.json<any>();
+        const result = await response.json<{
+          accessToken: string;
+          accessTokenExpiresAt: string;
+        }>();
 
         if (response.ok) {
           await updateAuthToken(authSession, {
@@ -86,12 +74,7 @@ export const getAuthToken = async (
           };
         }
 
-        throw new ApiError({
-          status: response.status,
-          backendError: result,
-          api: api_getNewAccessToken,
-          request: fetchInfo.request,
-        });
+        console.error(response.status, result);
       } catch (error) {
         console.error(error);
       }

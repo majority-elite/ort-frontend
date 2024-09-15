@@ -8,8 +8,20 @@ import {
   type FrontendErrorResponse,
   type FrontendSuccessResponse,
   type JsonValue,
-} from '@server';
+} from '@/types/api';
 
+/**
+ * `@remix-run/react`의 `useFetcher` wrapper
+ * - `FrontendSuccessResponse` 또는 `FrontendErrorResponse` 형태를 반환하는 `action`만 허용
+ * - 에러 발생 시 에러 토스트 띄우는 로직 적용
+ * @example
+ * ```
+ * const Component = () => {
+ *   const fetcher = useTypedFetcher<typeof action>();
+ *   // ...
+ * };
+ * ```
+ */
 const useTypedFetcher = <
   T extends (
     ...params: unknown[]

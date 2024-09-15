@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { type FrontendErrorResponse } from '@server';
+import type { JsonValue, FrontendErrorResponse } from '@/types/api';
 
 interface ErrorToastStore {
-  error: FrontendErrorResponse<unknown> | null;
-  setError: (newError: FrontendErrorResponse<unknown>) => void;
+  error: FrontendErrorResponse<JsonValue> | null;
+  setError: (newError: FrontendErrorResponse<JsonValue>) => void;
   clearError: () => void;
 }
 

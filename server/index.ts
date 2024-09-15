@@ -1,14 +1,5 @@
-export { Api, ApiError } from './constants/api';
 export { serverEnvSchema, clientEnvSchema } from './constants/env';
 
-export type {
-  JsonValue,
-  ApiRequest,
-  FetchApi,
-  BackendError,
-  FrontendSuccessResponse,
-  FrontendErrorResponse,
-} from './types/api';
 export type {
   AuthSession,
   AuthSessionData,
@@ -21,7 +12,5 @@ export type {
   ContextEnv,
 } from './types/env';
 
-export { makeSuccessResponse, makeErrorResponse } from './utils/api';
-export { getLoadContext, makeAuthSession } from './utils/cloudflare';
-
-export { remixCloudflareDevProxyVitePlugin } from './vite';
+export { getAuthToken } from './utils/auth';
+export { getLoadContext, makeAuthSessionStorage } from './utils/cloudflare';

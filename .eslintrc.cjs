@@ -142,7 +142,11 @@ module.exports = {
     },
 
     {
-      files: ['./server/**/*.{ts,tsx}'],
+      files: [
+        './server/**/*.{ts,tsx}',
+        './vite.config.ts',
+        './vite.config.storybook.ts',
+      ],
       rules: {
         'no-restricted-imports': [
           'error',
@@ -150,8 +154,9 @@ module.exports = {
             patterns: [
               {
                 // https://github.com/vitejs/vite/issues/10063
-                group: ['@/*', '@server/*', 'app/*', 'server/*'],
-                message: 'server 디렉토리 안에서는 상대 경로를 사용해 주세요.',
+                group: ['@/*', '@server', 'app/*', 'server/*'],
+                message:
+                  'server 디렉토리, 또는 Vite config 파일에서는 상대 경로를 사용해 주세요.',
               },
             ],
           },

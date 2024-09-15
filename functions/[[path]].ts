@@ -4,7 +4,7 @@ import {
   type ContextEnv,
   serverEnvSchema,
   getLoadContext,
-  makeAuthSession,
+  makeAuthSessionStorage,
 } from '@server';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -19,17 +19,23 @@ export const onRequest = async (
   clientEnvSchema.parse(context.env);
   serverEnvSchema.parse(context.env);
 
-  const { authSessionStorage, authSession } = await makeAuthSession(
-    {
-      authCookieSessionSecret: context.env.AUTH_COOKIE_SESSION_SECRET,
-      kvNamespace: context.env.KV_NAMESPACE,
-    },
+  const authSessionStorage = await makeAuthSessionStorage({
+    authCookieSessionSecret: context.env.AUTH_COOKIE_SESSION_SECRET,
+    kvNamespace: context.env.KV_NAMESPACE,
+  });
+
+  const authSession = await authSessionStorage.getSession(
     context.request.headers.get('Cookie'),
   );
 
   const handleRequest = createPagesFunctionHandler<ContextEnv>({
     build,
-    getLoadContext: (args) => getLoadContext(authSession, args),
+    getLoadContext: (args) =>
+      getLoadContext(
+        authSession,
+        () => authSessionStorage.commitSession(authSession),
+        args,
+      ),
   });
 
   const response = await handleRequest(context);
