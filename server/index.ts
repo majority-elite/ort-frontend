@@ -1,5 +1,7 @@
 export { serverEnvSchema, clientEnvSchema } from './constants/env';
 
+export { AuthSessionService } from './models/auth';
+
 export type {
   AuthSession,
   AuthSessionData,
@@ -12,5 +14,4 @@ export type {
   ContextEnv,
 } from './types/env';
 
-export { getAuthToken } from './utils/auth';
-export { getLoadContext, makeAuthSessionStorage } from './utils/cloudflare';
+export { getLoadContext, makeAuthSessionService } from './utils/cloudflare';

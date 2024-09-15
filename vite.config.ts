@@ -6,33 +6,29 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import {
   type ContextEnv,
   getLoadContext,
-  makeAuthSessionStorage,
+  makeAuthSessionService,
 } from './server';
 
 export default defineConfig({
   plugins: [
     remixCloudflareDevProxyVitePlugin<ContextEnv, CfProperties>({
       getLoadContext: async (args) => {
-        const authSessionStorage = await makeAuthSessionStorage({
-          authCookieSessionSecret:
-            args.context.cloudflare.env.AUTH_COOKIE_SESSION_SECRET,
-          kvNamespace: args.context.cloudflare.env.KV_NAMESPACE,
-        });
-        const authSession = await authSessionStorage.getSession(
+        const authSessionService = await makeAuthSessionService(
+          {
+            authCookieSessionSecret:
+              args.context.cloudflare.env.AUTH_COOKIE_SESSION_SECRET,
+            kvNamespace: args.context.cloudflare.env.KV_NAMESPACE,
+          },
           args.request.headers.get('Cookie'),
         );
-        const loadContext = await getLoadContext(
-          authSession,
-          () => authSessionStorage.commitSession(authSession),
-          args,
-        );
+        const loadContext = await getLoadContext(authSessionService, args);
         return loadContext;
       },
       getResponse: async (req, loadContext, handler) => {
         const response = await handler(req, loadContext);
         response.headers.append(
           'Set-Cookie',
-          await loadContext.commitSession(),
+          await loadContext.authSessionService.commitSession(),
         );
         return response;
       },

@@ -5,7 +5,8 @@ import {
 import { type GetLoadContextFunction } from '@remix-run/cloudflare-pages';
 import { type PlatformProxy } from 'wrangler';
 import { clientEnvSchema, serverEnvSchema } from '../constants/env';
-import type { AuthSession, AuthSessionData } from '../types/auth';
+import { AuthSessionService } from '../models/auth';
+import type { AuthSessionData } from '../types/auth';
 import type {
   ClientEnv,
   CloudflareEnv,
@@ -16,40 +17,36 @@ import type {
 declare module '@remix-run/cloudflare' {
   interface AppLoadContext extends ServerEnv, CloudflareEnv {
     readonly clientEnv: ClientEnv;
-    readonly authSession: AuthSession;
-    readonly commitSession: () => Promise<string>;
+    readonly authSessionService: AuthSessionService;
   }
 }
 
-export const getLoadContext: <Cf extends CfProperties>(
-  authSession: AuthSession,
-  commitSession: () => Promise<string>,
+export const getLoadContext = <Cf extends CfProperties>(
+  authSessionService: AuthSessionService,
   args: {
     request: Request;
     context: {
       cloudflare: Omit<PlatformProxy<ContextEnv, Cf>, 'dispose'>;
     };
   },
-) => ReturnType<GetLoadContextFunction<ContextEnv>> = async (
-  authSession,
-  commitSession,
-  { context },
-) => {
-  const clientEnv = clientEnvSchema.parse(context.cloudflare.env);
-  serverEnvSchema.parse(context.cloudflare.env);
+): ReturnType<GetLoadContextFunction<ContextEnv>> => {
+  const clientEnv = clientEnvSchema.parse(args.context.cloudflare.env);
+  serverEnvSchema.parse(args.context.cloudflare.env);
 
   return {
-    ...context.cloudflare.env,
+    ...args.context.cloudflare.env,
     clientEnv,
-    authSession,
-    commitSession,
+    authSessionService,
   };
 };
 
-export const makeAuthSessionStorage = async (env: {
-  authCookieSessionSecret: string;
-  kvNamespace: KVNamespace<string>;
-}) => {
+export const makeAuthSessionService = async (
+  env: {
+    authCookieSessionSecret: string;
+    kvNamespace: KVNamespace<string>;
+  },
+  cookieHeader?: string | null,
+) => {
   const authSessionCookie = createCookie('__auth_session', {
     secrets: [env.authCookieSessionSecret],
     sameSite: true,
@@ -58,6 +55,6 @@ export const makeAuthSessionStorage = async (env: {
     cookie: authSessionCookie,
     kv: env.kvNamespace,
   });
-
-  return authSessionStorage;
+  const authSession = await authSessionStorage.getSession(cookieHeader);
+  return new AuthSessionService(authSessionStorage, authSession);
 };

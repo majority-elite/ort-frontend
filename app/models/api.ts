@@ -6,7 +6,6 @@ import type {
   ApiSuccessReturnType,
   BackendError,
 } from '@/types/api';
-import { getAuthToken } from '@server';
 
 const COMMON_ERROR: {
   errorByStatus: Record<
@@ -131,7 +130,11 @@ export class Api<Variables, Result> {
    * // 이 경우 `throwOnError` 옵션을 주면 `isSuccess`를 체크하지 않아도 자동으로 `ApiSuccessReturnType`으로 추론
    * export const loader = ({ context }: LoaderFunctionArgs) => {
    *   // ...
-   *   const { result } = api_loginWithKakao.fetch({ code, state }, context);
+   *   const { result } = api_loginWithKakao.fetch(
+   *     { code, state },
+   *     context,
+   *     { throwOnError: true },
+   *   );
    *   // ...
    * };
    * ```
@@ -155,7 +158,7 @@ export class Api<Variables, Result> {
       const baseUrl = this.baseUrl ?? context.API_URL;
 
       const token = context.authSession
-        ? await getAuthToken(context.authSession, context.API_URL)
+        ? await context.authSessionService.getAuthToken(context)
         : null;
 
       const fetchInfo = this.getFetchInfo(variables, token?.accessToken);
