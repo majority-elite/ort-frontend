@@ -52,14 +52,14 @@ export interface FrontendErrorResponse<T extends JsonValue>
 /**
  * `Api.fetch`에서 요청 성공 시 응답하는 형식
  */
-export type ApiSuccessReturnType<Result> = {
+export type ApiSuccessReturn<Result> = {
   isSuccess: true;
   result: Result;
 };
 /**
  * `Api.fetch`에서 요청 실패 시 응답하는 형식
  */
-export type ApiFailureReturnType = {
+export type ApiFailureReturn = {
   isSuccess: false;
   error: ApiError;
 };
@@ -67,9 +67,7 @@ export type ApiFailureReturnType = {
 /**
  * `Api.fetch`에서 응답하는 형식
  */
-export type ApiReturnType<Result> =
-  | ApiSuccessReturnType<Result>
-  | ApiFailureReturnType;
+export type ApiReturn<Result> = ApiSuccessReturn<Result> | ApiFailureReturn;
 
 /**
  * `Api.fetch`에 줄 수 있는 옵션 목록
