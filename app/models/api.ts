@@ -63,24 +63,17 @@ export class Api<Variables, Result> {
     const parsedRequest = this.request(variables);
 
     const pathString =
-      parsedRequest.pathParams?.reduce<string>(
-        (prev, cur) => `${prev}/${cur}`,
-        '',
-      ) ?? '';
+      parsedRequest.pathParams && parsedRequest.pathParams.length > 0
+        ? '/' + parsedRequest.pathParams.join('/')
+        : '';
 
     const params = parsedRequest.queryParams ?? {};
-    const queryString = Object.keys(params).reduce(
-      (prev, cur) =>
-        `${prev}${
-          params[cur] !== null && params[cur] !== undefined
-            ? `&${cur}=${params[cur]}`
-            : ''
-        }`,
-      '',
-    );
+    const queryString = Object.keys(params)
+      .map((item) => `${item}=${params[item]}`)
+      .join('&');
 
     const pathname = `${this.endpoint}${pathString}${
-      queryString ? `?${queryString.slice(1)}` : ''
+      queryString.length > 0 ? `?${queryString}` : ''
     }`;
 
     const authorizationHeader = accessToken
