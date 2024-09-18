@@ -194,6 +194,12 @@ module.exports = {
             importNames: ['useFetcher'],
             message: '`@/hooks/useTypedFetcher`를 사용해 주세요.',
           },
+          {
+            group: ['@remix-run/cloudflare'],
+            importNames: ['redirect'],
+            message:
+              '`@/utils/server`의 `redirectWithAuthCookie`를 사용해 주세요.',
+          },
         ],
       },
     ],

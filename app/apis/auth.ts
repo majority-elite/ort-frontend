@@ -1,7 +1,7 @@
 import { Api } from '@/models/api';
 
-export const api_loginWithKakao = new Api<
-  { code: string; state: string },
+export const api_loginWithOauth = new Api<
+  { oauthKey: string },
   {
     userId: number;
     accessToken: string;
@@ -10,13 +10,12 @@ export const api_loginWithKakao = new Api<
     refreshTokenExpiresAt: string;
   }
 >({
-  method: 'POST',
-  endpoint: '/login/oauth2/code/kakao',
+  method: 'GET',
+  endpoint: '/oauth2/token',
   needToLogin: false,
   request: (variables) => ({
     queryParams: {
-      code: variables.code,
-      state: variables.state,
+      oauthKey: variables.oauthKey,
     },
   }),
 });

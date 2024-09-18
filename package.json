@@ -21,6 +21,8 @@
     "@remix-run/cloudflare-pages": "2.11.2",
     "@remix-run/react": "2.11.2",
     "@remix-run/serve": "2.11.2",
+    "@sentry/remix": "8.30.0",
+    "@sentry/vite-plugin": "2.22.4",
     "@vanilla-extract/css": "1.15.3",
     "isbot": "4.4.0",
     "react": "18.3.1",
@@ -32,7 +34,6 @@
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
-    "@majority-elite/remix-dev-utils": "0.1.2",
     "@remix-run/dev": "2.11.2",
     "@remix-run/testing": "2.11.2",
     "@storybook/addon-essentials": "8.2.9",
@@ -72,5 +73,10 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": "eslint --max-warnings=0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vite@5.3.3": "patches/vite@5.3.3.patch"
+    }
   }
 }

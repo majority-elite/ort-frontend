@@ -148,10 +148,10 @@ export class Api<Variables, Result> {
     options?: ApiOptions,
   ): Promise<ApiReturn<Result>> {
     try {
-      const baseUrl = this.baseUrl ?? context.API_URL;
+      const baseUrl: string = this.baseUrl ?? import.meta.env.SERVER_API_URL;
 
       const token = context.authSession
-        ? await context.authSessionService.getAuthToken(context)
+        ? await context.authSessionService.getAuthToken()
         : null;
 
       const fetchInfo = this.getFetchInfo(variables, token?.accessToken);

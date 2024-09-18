@@ -1,5 +1,4 @@
 import { type TypedResponse } from '@remix-run/cloudflare';
-// `useTypedFetcher`를 사용하라는 규칙인데 이 파일이 바로 그 구현체이므로 무시
 // eslint-disable-next-line no-restricted-imports
 import { useFetcher } from '@remix-run/react';
 import { useEffect } from 'react';

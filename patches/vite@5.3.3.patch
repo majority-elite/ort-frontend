@@ -1,0 +1,12 @@
+diff --git a/types/importMeta.d.ts b/types/importMeta.d.ts
+index bd4418379951b36d96cdaa98d7e2dd4973c56989..337013f37546d7f6857e176984ebdabfc1e65925 100644
+--- a/types/importMeta.d.ts
++++ b/types/importMeta.d.ts
+@@ -3,7 +3,6 @@
+ // <https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation>
+ 
+ interface ImportMetaEnv {
+-  [key: string]: any
+   BASE_URL: string
+   MODE: string
+   DEV: boolean

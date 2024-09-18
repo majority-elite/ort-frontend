@@ -8,25 +8,34 @@ import {
   ScrollRestoration,
   useFetchers,
   useLoaderData,
-  useRouteError,
 } from '@remix-run/react';
-import { useEffect, useRef } from 'react';
-import useErrorToast from './hooks/useErrorToast';
+import { withSentry } from '@sentry/remix';
+import { useEffect, useMemo, useRef } from 'react';
 import * as styles from './root.css';
-import { EnvContext } from '@/contexts/EnvContext';
+import AuthContext, { type AuthStore } from '@/contexts/AuthContext';
+import useErrorToast from '@/hooks/useErrorToast';
 
 import '@/styles/theme.css';
 
-export const loader = async (args: LoaderFunctionArgs) =>
-  json({
-    env: args.context.clientEnv,
-  });
+export const loader = async ({ context }: LoaderFunctionArgs) => {
+  const authToken = await context.authSessionService.getAuthToken();
+  const isLoggedIn = authToken !== null;
+  return json({ isLoggedIn });
+};
 
 const App = () => {
-  const data = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
+
   const fetchers = useFetchers();
   const { error, clearError } = useErrorToast();
   const errorToastRemovalTimeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+
+  const authStoreValue = useMemo<AuthStore>(
+    () => ({
+      isLoggedIn: loaderData.isLoggedIn,
+    }),
+    [loaderData.isLoggedIn],
+  );
 
   useEffect(() => {
     if (error) {
@@ -52,7 +61,7 @@ const App = () => {
         <Links />
       </head>
       <body>
-        <EnvContext.Provider value={data.env}>
+        <AuthContext.Provider value={authStoreValue}>
           <Outlet />
           {fetchers.length > 0 && (
             <div className={styles.loadingToast}>
@@ -69,7 +78,7 @@ const App = () => {
               </div>
             </div>
           )}
-        </EnvContext.Provider>
+        </AuthContext.Provider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -77,11 +86,4 @@ const App = () => {
   );
 };
 
-export const ErrorBoundary = () => {
-  const error = useRouteError();
-  console.log('ErrorBoundary', error);
-
-  return <p>Error</p>;
-};
-
-export default App;
+export default withSentry(App);

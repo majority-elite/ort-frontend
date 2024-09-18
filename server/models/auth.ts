@@ -1,4 +1,4 @@
-import { type AppLoadContext } from '@remix-run/cloudflare';
+import { type Cookie } from '@remix-run/cloudflare';
 import type {
   AuthSession,
   AuthSessionData,
@@ -6,19 +6,48 @@ import type {
 } from '../types/auth';
 
 export class AuthSessionService {
+  private authSessionCookie: Cookie;
   private authSessionStorage: AuthSessionStorage;
   private authSession: AuthSession;
+  private nextAction: 'none' | 'commit' | 'destroy' = 'none';
 
   constructor(
+    authSessionCookie: Cookie,
     authSessionStorage: AuthSessionStorage,
     authSession: AuthSession,
   ) {
+    this.authSessionCookie = authSessionCookie;
     this.authSessionStorage = authSessionStorage;
     this.authSession = authSession;
   }
 
-  async commitSession(): Promise<string> {
-    return await this.authSessionStorage.commitSession(this.authSession);
+  async parseCookieHeader(cookieHeader: string | null): Promise<string | null> {
+    return await this.authSessionCookie.parse(cookieHeader);
+  }
+
+  /**
+   * session 수정사항을 반영하고 Set-Cookie header를 얻는 method
+   * - Set-Cookie를 할 필요가 없는 경우 `null` 반환
+   */
+  async commitSession(): Promise<string | null> {
+    console.log('commitSession', this.nextAction);
+    if (this.nextAction === 'destroy') {
+      const cookieHeader = await this.authSessionStorage.destroySession(
+        this.authSession,
+      );
+      this.nextAction = 'none';
+      return cookieHeader;
+    }
+
+    if (this.nextAction === 'commit') {
+      const cookieHeader = await this.authSessionStorage.commitSession(
+        this.authSession,
+      );
+      this.nextAction = 'none';
+      return cookieHeader;
+    }
+
+    return null;
   }
 
   async clearAuthToken() {
@@ -26,6 +55,7 @@ export class AuthSessionService {
     this.authSession.unset('accessTokenExpiresAt');
     this.authSession.unset('refreshToken');
     this.authSession.unset('refreshTokenExpiresAt');
+    this.nextAction = 'destroy';
   }
 
   /**
@@ -44,6 +74,7 @@ export class AuthSessionService {
     (Object.keys(newToken) as (keyof typeof newToken)[]).forEach((key) => {
       if (newToken[key]) {
         this.authSession.set(key, newToken[key]);
+        this.nextAction = 'commit';
       }
     });
   }
@@ -52,7 +83,7 @@ export class AuthSessionService {
    * auth token을 얻는 method
    * - access token이 만료된 경우 refresh token으로 자동 업데이트
    */
-  async getAuthToken(context: AppLoadContext): Promise<{
+  async getAuthToken(): Promise<{
     accessToken: string;
     refreshToken: string;
   } | null> {
@@ -71,7 +102,6 @@ export class AuthSessionService {
       accessTokenExpiresAtString === undefined ||
       refreshTokenExpiresAtString === undefined
     ) {
-      await this.clearAuthToken();
       return null;
     }
 
@@ -85,13 +115,16 @@ export class AuthSessionService {
       // refresh token이 만료되지 않음 (서버 응답 시간 등을 고려해 1분 여유 포함)
       if (refreshTokenExpiresAt.getTime() > now.getTime() + 1000 * 60) {
         try {
-          const response = await fetch(`${context.API_URL}/token/access`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
+          const response = await fetch(
+            `${import.meta.env.SERVER_API_URL}/token/access`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ refreshToken }),
             },
-            body: JSON.stringify({ refreshToken }),
-          });
+          );
           const result = await response.json<{
             accessToken: string;
             accessTokenExpiresAt: string;

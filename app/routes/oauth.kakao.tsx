@@ -1,12 +1,12 @@
-export const loader = async () => null;
+import { type LoaderFunctionArgs } from '@remix-run/cloudflare';
+import { redirectWithAuthCookie } from '@/utils/server';
 
-const KakaoRedirect = () => (
-  <div>
-    {/* <p className={textStyle.headline1B}>{fetcher.state}</p>
-      <fetcher.Form method="POST">
-        <button type="submit">test submit</button>
-      </fetcher.Form> */}
-  </div>
-);
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const { origin } = url;
 
-export default KakaoRedirect;
+  return redirectWithAuthCookie(
+    `${import.meta.env.SERVER_API_URL}/oauth2/authorization/kakao?redirect_to=${origin}/oauth`,
+    context.authSessionService,
+  );
+};
