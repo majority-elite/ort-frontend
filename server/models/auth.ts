@@ -30,7 +30,6 @@ export class AuthSessionService {
    * - Set-Cookie를 할 필요가 없는 경우 `null` 반환
    */
   async commitSession(): Promise<string | null> {
-    console.log('commitSession', this.nextAction);
     if (this.nextAction === 'destroy') {
       const cookieHeader = await this.authSessionStorage.destroySession(
         this.authSession,
