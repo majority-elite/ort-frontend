@@ -19,11 +19,13 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
+    Sentry.extraErrorDataIntegration(),
   ],
 
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
   environment: import.meta.env.SHARED_APP_MODE,
+  debug: import.meta.env.SHARED_APP_MODE === 'development',
 });
 
 startTransition(() => {

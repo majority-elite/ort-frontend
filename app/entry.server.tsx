@@ -13,6 +13,8 @@ Sentry.init({
   tracesSampleRate: 1,
   autoInstrumentRemix: true,
   environment: import.meta.env.SHARED_APP_MODE,
+  debug: import.meta.env.SHARED_APP_MODE === 'development',
+  integrations: [Sentry.extraErrorDataIntegration()],
 });
 
 export const handleError = Sentry.sentryHandleError;

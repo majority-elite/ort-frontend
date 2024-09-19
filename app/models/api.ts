@@ -228,7 +228,6 @@ export class Api<Variables, Result> {
         };
       }
 
-      // TODO: Sentry 등 에러 로깅 솔루션 추가
       console.error(error, this, variables);
       const apiError = new ApiError({
         api: this,
