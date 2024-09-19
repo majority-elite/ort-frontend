@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
     'SENTRY_',
   ]);
 
-  envSchema.parse(viteEnv);
+  const env = envSchema.parse(viteEnv);
 
   const configEnv = z
     .object({
@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
       remixCloudflareDevProxyVitePlugin<ContextEnv, CfProperties>({
         getLoadContext: (args) =>
           getLoadContext(args, {
-            authCookieSessionSecret: viteEnv.SERVER_AUTH_COOKIE_SESSION_SECRET,
+            authCookieSessionSecret: env.SERVER_AUTH_COOKIE_SESSION_SECRET,
           }),
       }),
       remix({
@@ -48,6 +48,9 @@ export default defineConfig(({ mode }) => {
         project: 'ort-frontend',
         url: 'https://sentry.io/',
         authToken: configEnv.SENTRY_AUTH_TOKEN,
+        sourcemaps: {
+          filesToDeleteAfterUpload: './build/**/*.map',
+        },
       }),
     ],
     build: {
