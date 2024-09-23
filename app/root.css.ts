@@ -1,4 +1,7 @@
-import { globalFontFace, globalStyle } from '@vanilla-extract/css';
+import { globalFontFace, globalStyle, style } from '@vanilla-extract/css';
+import { textStyle } from './styles/text.css';
+import { themeVars } from './styles/theme.css';
+import { rgba } from './utils/style';
 import SUITVariable from '@/assets/SUIT-Variable.woff2';
 
 globalFontFace('SUIT-Variable', {
@@ -25,3 +28,58 @@ globalStyle('body', {
 globalStyle('h1, h2, h3, h4, h5, h6, p', {
   margin: 0,
 });
+
+export const loadingToast = style({
+  position: 'fixed',
+  bottom: '32px',
+  left: '50%',
+  transform: 'translate(-50%, 0)',
+  backgroundColor: '#121212',
+  borderRadius: '12px',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingRight: '12px',
+  gap: '10px',
+  width: '180px',
+  height: '50px',
+});
+
+export const loadingLottie = style({
+  width: '43px',
+  height: '43px',
+});
+
+export const loadingToastText = style([
+  textStyle.subtitle2SB,
+  { color: themeVars.color.grayscale.white.hex },
+]);
+
+export const errorToastWrap = style({
+  position: 'fixed',
+  bottom: '32px',
+  left: '50%',
+  transform: 'translate(-50%, 0)',
+  padding: '0 24px',
+  width: '100%',
+  maxWidth: '648px',
+});
+
+export const errorToast = style({
+  backgroundColor: rgba(themeVars.color.system.caution.rgb, 0.7),
+  borderRadius: '12px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '12px 24px',
+});
+
+export const errorToastText = style([
+  textStyle.subtitle2SB,
+  {
+    color: themeVars.color.grayscale.white.hex,
+    textAlign: 'center',
+    wordBreak: 'keep-all',
+  },
+]);

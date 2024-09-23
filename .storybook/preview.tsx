@@ -1,6 +1,6 @@
 import { createRemixStub } from '@remix-run/testing';
 import type { Preview } from '@storybook/react';
-import '../app/root.css';
+import '@/root.css';
 
 const preview: Preview = {
   parameters: {

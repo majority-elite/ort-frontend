@@ -2,8 +2,15 @@ node_modules
 
 /.cache
 /build
-.env
+.wrangler
 
 # macOS
 .DS_Store
 *storybook.log
+
+# env
+.env
+.env.local
+.dev.vars
+
+wrangler.toml

@@ -1,5 +1,6 @@
 import type { MetaFunction } from '@remix-run/cloudflare';
 import KakaoLoginButton from '@/components/KakaoLoginButton';
+import useAuth from '@/hooks/useAuth';
 // import Test from '@/components/Test';
 
 export const meta: MetaFunction = () => [
@@ -11,12 +12,17 @@ export const meta: MetaFunction = () => [
   },
 ];
 
-const Index = () => (
-  <div>
-    <h1>Ort</h1>
-    {/* <Test /> */}
-    <KakaoLoginButton />
-  </div>
-);
+const Index = () => {
+  const { isLoggedIn } = useAuth();
+
+  return (
+    <div>
+      <h1>Ort</h1>
+      isLoggedIn: {isLoggedIn ? 'true' : 'false'}
+      {/* <Test /> */}
+      <KakaoLoginButton />
+    </div>
+  );
+};
 
 export default Index;

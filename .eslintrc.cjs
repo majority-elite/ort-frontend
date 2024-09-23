@@ -110,12 +110,24 @@ module.exports = {
             format: ['PascalCase'],
           },
           {
+            selector: 'typeParameter',
+            format: ['PascalCase'],
+            prefix: ['_'],
+            filter: '^_',
+          },
+          {
             selector: ['enumMember'],
             format: ['UPPER_CASE'],
           },
           {
             selector: ['objectLiteralProperty'],
             format: null,
+          },
+          {
+            selector: 'variable',
+            format: ['camelCase'],
+            prefix: ['api_', 'unstable_'],
+            filter: '(^api_|^unstable_)',
           },
         ],
       },
@@ -126,6 +138,29 @@ module.exports = {
       files: ['.eslintrc.cjs'],
       env: {
         node: true,
+      },
+    },
+
+    {
+      files: [
+        './server/**/*.{ts,tsx}',
+        './vite.config.ts',
+        './vite.config.storybook.ts',
+      ],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: [
+              {
+                // https://github.com/vitejs/vite/issues/10063
+                group: ['@/*', '@server', 'app/*', 'server/*'],
+                message:
+                  'server 디렉토리, 또는 Vite config 파일에서는 상대 경로를 사용해 주세요.',
+              },
+            ],
+          },
+        ],
       },
     },
   ],
@@ -142,5 +177,31 @@ module.exports = {
     ],
     'arrow-body-style': ['warn', 'as-needed'],
     'prettier/prettier': 'warn',
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['..*'],
+            message: '다른 경로에 있는 모듈은 절대 경로로 불러와 주세요.',
+          },
+          {
+            group: ['app/*', 'server/*'],
+            message: '`@/`, `@server` 등 올바른 절대 경로를 사용해 주세요.',
+          },
+          {
+            group: ['@remix-run/react'],
+            importNames: ['useFetcher'],
+            message: '`@/hooks/useTypedFetcher`를 사용해 주세요.',
+          },
+          {
+            group: ['@remix-run/cloudflare'],
+            importNames: ['redirect'],
+            message:
+              '`@/utils/server`의 `redirectWithAuthCookie`를 사용해 주세요.',
+          },
+        ],
+      },
+    ],
   },
 };
