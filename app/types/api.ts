@@ -9,6 +9,8 @@ type JsonObject = {
 };
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 
+export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
 export interface ApiRequest {
   pathParams?: (string | number)[];
   headers?: Record<string, string>;
@@ -75,3 +77,11 @@ export type ApiReturn<Result> = ApiSuccessReturn<Result> | ApiFailureReturn;
 export interface ApiOptions {
   throwOnError?: boolean;
 }
+
+export type ApiFetchInfo = {
+  pathname: string;
+  method: ApiMethod;
+  headers: Record<string, string>;
+  body?: string | FormData;
+  request: ApiRequest;
+};

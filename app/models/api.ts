@@ -1,5 +1,7 @@
 import { type AppLoadContext } from '@remix-run/cloudflare';
 import type {
+  ApiFetchInfo,
+  ApiMethod,
   ApiOptions,
   ApiRequest,
   ApiReturn,
@@ -23,7 +25,7 @@ const COMMON_ERROR: {
 };
 
 export class Api<Variables, Result> {
-  public method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  public method: ApiMethod;
   public endpoint: `/${string}`;
   public needToLogin: boolean;
   public baseUrl?: string;
@@ -33,7 +35,7 @@ export class Api<Variables, Result> {
   public request: (variables: Variables) => ApiRequest;
 
   constructor(apiInfo: {
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    method: ApiMethod;
     endpoint: `/${string}`;
     needToLogin?: boolean;
     baseUrl?: string;
@@ -50,16 +52,7 @@ export class Api<Variables, Result> {
     this.request = apiInfo.request;
   }
 
-  getFetchInfo(
-    variables: Variables,
-    accessToken?: string,
-  ): {
-    pathname: string;
-    method: Api<Variables, Result>['method'];
-    headers: ApiRequest['headers'];
-    body?: string | FormData;
-    request: ApiRequest;
-  } {
+  getFetchInfo(variables: Variables, accessToken?: string): ApiFetchInfo {
     const parsedRequest = this.request(variables);
 
     const pathString =
@@ -147,22 +140,23 @@ export class Api<Variables, Result> {
     context: AppLoadContext,
     options?: ApiOptions,
   ): Promise<ApiReturn<Result>> {
+    const baseUrl: string = this.baseUrl ?? import.meta.env.SERVER_API_URL;
+
+    const token = context.authSession
+      ? await context.authSessionService.getAuthToken()
+      : null;
+
+    const fetchInfo = this.getFetchInfo(variables, token?.accessToken);
+
+    const fetchUrl = `${baseUrl}${fetchInfo.pathname}`;
+
     try {
-      const baseUrl: string = this.baseUrl ?? import.meta.env.SERVER_API_URL;
-
-      const token = context.authSession
-        ? await context.authSessionService.getAuthToken()
-        : null;
-
-      const fetchInfo = this.getFetchInfo(variables, token?.accessToken);
-
-      const fetchUrl = `${baseUrl}${fetchInfo.pathname}`;
-
       if (!token?.accessToken && this.needToLogin) {
         throw new ApiError({
           status: 401,
           api: this,
           request: fetchInfo.request,
+          fetchInfo,
           ...COMMON_ERROR.errorByStatus[401],
         });
       }
@@ -214,6 +208,7 @@ export class Api<Variables, Result> {
         api: this,
         backendError: backendError ?? undefined,
         request: fetchInfo.request,
+        fetchInfo,
       });
     } catch (error) {
       // 이미 처리된 에러는 그대로 반환
@@ -231,7 +226,8 @@ export class Api<Variables, Result> {
       console.error(error, this, variables);
       const apiError = new ApiError({
         api: this,
-        request: this.request(variables),
+        request: fetchInfo.request,
+        fetchInfo,
         frontendError: error,
       });
       if (options?.throwOnError) {
@@ -254,6 +250,8 @@ export class ApiError extends Error {
 
   public request: ApiRequest;
 
+  public fetchInfo: ApiFetchInfo;
+
   public frontendError?: unknown;
 
   constructor(error: {
@@ -263,6 +261,7 @@ export class ApiError extends Error {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     api: Api<any, any>;
     request: ApiRequest;
+    fetchInfo: ApiFetchInfo;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     frontendError?: any;
   }) {
@@ -271,6 +270,7 @@ export class ApiError extends Error {
     this.status = error.status ?? error.backendError?.status;
     this.api = error.api;
     this.request = error.request;
+    this.fetchInfo = error.fetchInfo;
     this.serverError = error.backendError;
     this.frontendError = error.frontendError;
   }
