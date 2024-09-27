@@ -52,3 +52,6 @@ export const getRGBFromHex = (hex: string) => {
 
 export const rgba = (cssVar: string, alpha: number) =>
   `rgba(${cssVar}, ${alpha})`;
+
+export const className = (...classList: (string | undefined)[]) =>
+  classList.filter((item) => typeof item === 'string').join(' ');
