@@ -1,6 +1,5 @@
 import {
   useRef,
-  useState,
   type DetailedHTMLProps,
   type InputHTMLAttributes,
 } from 'react';
@@ -16,7 +15,7 @@ interface FormInputPropsBase
   isError?: boolean;
 }
 
-interface FormTextInputProps extends FormInputPropsBase {
+export interface FormTextInputProps extends FormInputPropsBase {
   Icon?: (props: { className?: string }) => JSX.Element;
   onTextChange?: (newText: string) => void;
 }
@@ -47,19 +46,20 @@ const FormTextInput = ({
   </div>
 );
 
-interface FormImageInputProps extends FormInputPropsBase {
+export interface FormImageInputProps extends FormInputPropsBase {
   multiple?: false;
+  previewImageUrl?: string;
   onImageChange?: (imageUrl: string) => void;
 }
 
 const FormImageInput = ({
   isError,
   multiple = false,
+  previewImageUrl,
   onImageChange,
   ...inputProps
 }: FormImageInputProps) => {
   const inputElement = useRef<HTMLInputElement>(null);
-  const [previewImageUrl, setPreviewImageUrl] = useState('');
 
   return (
     <button
@@ -71,7 +71,7 @@ const FormImageInput = ({
         inputElement.current?.click();
       }}
     >
-      {previewImageUrl.length === 0 && (
+      {previewImageUrl?.length === 0 && (
         <svg
           width="24"
           height="24"
@@ -107,13 +107,12 @@ const FormImageInput = ({
           if (files && files[0]) {
             const urls = await getDataURLFromFiles(files[0]);
             onImageChange?.(urls[0]);
-            setPreviewImageUrl(urls[0]);
           }
 
           e.currentTarget.value = '';
         }}
       />
-      {previewImageUrl.length > 0 && (
+      {previewImageUrl && previewImageUrl.length > 0 && (
         <img
           src={previewImageUrl}
           alt="preview before upload"

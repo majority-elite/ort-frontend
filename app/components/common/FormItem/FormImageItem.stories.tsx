@@ -2,10 +2,10 @@ import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import FormInput from './FormInput';
+import FormItem from './FormItem';
 
-const meta: Meta<typeof FormInput.Image> = {
-  component: FormInput.Image,
+const meta: Meta<typeof FormItem.Image> = {
+  component: FormItem.Image,
   decorators: [
     function Decorator(Story, ctx) {
       const [previewImageUrl, setPreviewImageUrl] = useState('');
@@ -28,10 +28,13 @@ const meta: Meta<typeof FormInput.Image> = {
 
 export default meta;
 
-type Story = StoryObj<typeof FormInput.Image>;
+type Story = StoryObj<typeof FormItem.Image>;
 
 export const Main: Story = {
   args: {
-    isError: false,
+    label: '이름',
+    optional: false,
+    errorMessage: '',
+    caption: '',
   },
 };
