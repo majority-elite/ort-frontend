@@ -23,7 +23,7 @@
  * ```
  */
 export const getMediaQuery = (
-  breakpoints: readonly (readonly [number, number])[],
+  ...breakpoints: readonly (readonly [number, number])[]
 ) => {
   const { minimum, maximum } = breakpoints.reduce(
     (prev, cur) => ({
