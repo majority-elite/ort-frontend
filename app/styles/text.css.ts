@@ -16,7 +16,7 @@ const getTextStyleFromInfo = <
   lineHeight: `${info.pc.lineHeight / 10}rem`,
   fontWeight: info.pc.fontWeight,
   '@media': {
-    [getMediaQuery([Breakpoint.MOBILE1, Breakpoint.MOBILE2])]: {
+    [getMediaQuery(Breakpoint.MOBILE1, Breakpoint.MOBILE2)]: {
       fontSize: `${info.mobile.fontSize / 10}rem`,
       lineHeight: `${info.mobile.lineHeight / 10}rem`,
       fontWeight: info.mobile.fontWeight,

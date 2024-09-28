@@ -17,7 +17,7 @@ export const textInputContainer = style({
   borderWidth: '1px',
   height: '33px',
   '@media': {
-    [getMediaQuery([Breakpoint.MOBILE2, Breakpoint.MOBILE1])]: {
+    [getMediaQuery(Breakpoint.MOBILE2, Breakpoint.MOBILE1)]: {
       gap: '6px',
       height: '31px',
     },
@@ -32,7 +32,7 @@ export const textInputIcon = style({
   width: '16px',
   height: '16px',
   '@media': {
-    [getMediaQuery([Breakpoint.MOBILE2, Breakpoint.MOBILE1])]: {
+    [getMediaQuery(Breakpoint.MOBILE2, Breakpoint.MOBILE1)]: {
       width: '12px',
       height: '12px',
     },
@@ -67,7 +67,7 @@ export const imageInputContainer = style({
   cursor: 'pointer',
   overflow: 'hidden',
   '@media': {
-    [getMediaQuery([Breakpoint.MOBILE2, Breakpoint.MOBILE1])]: {
+    [getMediaQuery(Breakpoint.MOBILE2, Breakpoint.MOBILE1)]: {
       width: '80px',
       height: '80px',
       borderRadius: '40px',

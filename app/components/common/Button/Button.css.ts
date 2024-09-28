@@ -53,7 +53,7 @@ export const buttonStyleBySize = styleVariants({
     padding: '6px 12px',
     borderRadius: '12px',
     '@media': {
-      [getMediaQuery([Breakpoint.MOBILE1, Breakpoint.MOBILE2])]: {
+      [getMediaQuery(Breakpoint.MOBILE1, Breakpoint.MOBILE2)]: {
         padding: '6px 12px',
         borderRadius: '10px',
       },
@@ -63,7 +63,7 @@ export const buttonStyleBySize = styleVariants({
     padding: '12px 28px',
     borderRadius: '12px',
     '@media': {
-      [getMediaQuery([Breakpoint.MOBILE1, Breakpoint.MOBILE2])]: {
+      [getMediaQuery(Breakpoint.MOBILE1, Breakpoint.MOBILE2)]: {
         padding: '10px 24px',
         borderRadius: '10px',
       },
@@ -73,7 +73,7 @@ export const buttonStyleBySize = styleVariants({
     padding: '12px 32px',
     borderRadius: '12px',
     '@media': {
-      [getMediaQuery([Breakpoint.MOBILE1, Breakpoint.MOBILE2])]: {
+      [getMediaQuery(Breakpoint.MOBILE1, Breakpoint.MOBILE2)]: {
         padding: '12px 32px',
         borderRadius: '12px',
       },

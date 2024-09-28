@@ -25,5 +25,8 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
+      - name: 📦 Check Type
+        run: pnpm exec tsc --noEmit
+
       - name: 📦 Run ESLint
         run: pnpm exec eslint . --max-warnings=0
