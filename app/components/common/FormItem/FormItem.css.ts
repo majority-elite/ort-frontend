@@ -36,7 +36,7 @@ export const caption = style([
     display: 'block',
     minHeight: `${textStyleInfo.body2R.pc.lineHeight}px`,
     '@media': {
-      [getMediaQuery([Breakpoint.MOBILE2, Breakpoint.MOBILE1])]: {
+      [getMediaQuery(Breakpoint.MOBILE2, Breakpoint.MOBILE1)]: {
         minHeight: `${textStyleInfo.body2R.mobile.lineHeight}px`,
       },
     },
