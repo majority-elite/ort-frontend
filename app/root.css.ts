@@ -29,6 +29,26 @@ globalStyle('h1, h2, h3, h4, h5, h6, p', {
   margin: 0,
 });
 
+globalStyle(
+  `input[type="text"],
+input[type="password"],
+input[type="submit"],
+input[type="search"],
+input[type="tel"],
+input[type="email"],
+html input[type="button"],
+input[type="reset"]`,
+  {
+    appearance: 'none',
+    MozAppearance: 'none',
+    WebkitAppearance: 'none',
+    borderRadius: 0,
+    WebkitBorderRadius: 0,
+    MozBorderRadius: 0,
+    outline: 0,
+  },
+);
+
 export const loadingToast = style({
   position: 'fixed',
   bottom: '32px',
